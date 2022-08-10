@@ -5,6 +5,9 @@
   "directories": {
     "example": "root"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "open-app": "gulp open-app",
     "a0-demo": "node server.js",
