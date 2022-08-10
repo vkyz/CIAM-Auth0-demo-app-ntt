@@ -1,0 +1,41 @@
+{
+  "name": "okta-ciam-demo-app",
+  "version": "1.0.0",
+  "description": "Auth0-Okta CIAM demo app",
+  "directories": {
+    "example": "root"
+  },
+  "scripts": {
+    "open-app": "gulp open-app",
+    "a0-demo": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "gulp-watch"
+  },
+  "dependencies": {
+    "auth0": "^2.42.0",
+    "axios": "^0.25.0",
+    "body-parser": "^1.19.1",
+    "codemirror": "^5.48.0",
+    "debug": "~2.6.9",
+    "dotenv": "^6.1.0",
+    "ejs": "^2.7.4",
+    "express": "^4.17.1",
+    "express-openid-connect": "^2.0.0",
+    "jquery": "^3.6.0",
+    "jwt-decode": "^3.1.2",
+    "moment": "^2.24.0",
+    "morgan": "~1.9.0",
+    "qs": "^6.11.0",
+    "random-words": "^1.1.2"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-install": "^1.1.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-open": "^3.0.1"
+  }
+}

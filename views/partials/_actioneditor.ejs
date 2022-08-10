@@ -1,0 +1,105 @@
+<div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Sample Action code</h4>
+      <div class="mt-4 py-2 border-top border-bottom">
+        <span style="font-size: x-small;display: none;" id="actionlabel">Action Id: </span>
+        <span style="font-size: x-small;display: none;" id="actionid"></span>
+        <i class="fa fa-circle-arrow-up icon-sm btn" id="deploy" style="display: none;width: auto;"> &nbsp; <span>Deploy</span></i>
+        <ul class="nav profile-navbar">
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="save">
+              <i class="mdi mdi-content-save"></i> Save (new)</a>
+          </li>
+          <li class="nav-item" id="li-update" style="display: none;">
+            <a class="nav-link active" href="#" id="update">
+              <i class="mdi mdi-content-save-all"></i> Update</a>
+          </li>
+        </ul>
+        <div id="action" style="display: none;">
+        <label for="actionname">Action Name</label>
+          <input type="text" class="form-control" id="actionname" placeholder="Name your action">
+          <button id="submit" class="btn btn-primary me-2">Submit</button>
+        <button class="btn btn-dark" id="cancel">Cancel</button>
+      </div>
+      </div>
+      <%- include('_loader') -%>
+      <textarea id="code-editable" name="code-editable"></textarea>
+    </div>
+  </div>
+
+  <script>
+    $("#save").click(function(e){
+      e.preventDefault();
+      $("#action").show();
+    });
+
+    $("#update").click(function(e){
+      e.preventDefault();
+      
+    });
+
+    $("#cancel").click(function(e){
+      e.preventDefault();
+      $("#action").hide();
+    });
+
+    $("#submit").click(function(e){
+      e.preventDefault();
+      $("#loader").show();
+      let actionname = $("#actionname").val();
+      if(!actionname) {
+        alert("Action name required");
+        $("#loader").hide();
+        return;
+      }
+      let code = $("#code-editable").val();
+      $("#action").hide();
+      $.ajax({
+          type: "POST",
+          url: "/createaction",
+          contentType: 'application/json',
+          data: JSON.stringify({name: actionname, code: code}),
+          success: function(data){
+              console.log("data: ",data);
+              $("#li-update").show();
+              $("#actionlabel").show();
+              $("#deploy").show();
+              $("#actionid").show().text(data.id);
+              $("#loader").hide();
+          },
+          error: function(errMsg){
+            $("#action").show();
+              $("#loader").hide();
+              alert("Error occured: ",errMsg);
+          }
+      });
+    });
+
+    $("#deploy").click(function(e){
+      e.preventDefault();
+      $("#loader").show();
+      let actionid = $("#actionid").text();
+      if(!actionid) {
+        alert("Action Id required");
+        $("#loader").hide();
+        return;
+      }
+      $.ajax({
+          type: "POST",
+          url: "/deployaction",
+          contentType: 'application/json',
+          data: JSON.stringify({id: actionid}),
+          success: function(data){
+              console.log("data: ",data);
+              $("#loader").hide();
+              //$(this).addClass("txt-success");
+              $(this).hide();
+              alert("Action deployed");
+          },
+          error: function(errMsg){
+              $("#loader").hide();
+              alert("Error occured: ",errMsg);
+          }
+      });
+    });
+  </script>

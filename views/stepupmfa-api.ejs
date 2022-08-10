@@ -1,0 +1,124 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('partials/_header') -%>
+  <link rel="stylesheet" href="/assets/js/plugins/codemirror/codemirror.css">
+</head>
+
+<body class="g-sidenav-show  bg-gray-100">
+  <%- include('partials/_sidebar') -%>
+  <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <!-- Navbar -->
+    <%- include('partials/_navbar') -%>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+      <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4">
+          <%- include('partials/_actioneditor') -%>
+        </div>
+        <div class="col-lg-5">
+          <div class="card h-100 p-3">
+            <p class="mb-1 pt-2 text-bold">Documentation</p>
+            <a href="https://auth0.com/docs/secure/multi-factor-authentication/step-up-authentication/configure-step-up-authentication-for-apis" target="_blank">Click here for documentation</a>
+            <!--<iframe src="https://auth0.com/docs/secure/multi-factor-authentication/step-up-authentication/configure-step-up-authentication-for-apis" style="border: none;" width="100%" height="600px"></iframe>-->
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
+  <!-- init the code for this page -->
+  <script>
+    const code = `/**
+* Handler that will be called during the execution of a PostLogin flow.
+*
+* @param {Event} event - Details about the user and the context in which they are logging in.
+* @param {PostLoginAPI} api - Interface whose methods can be used to change the behavior of the login.
+*/
+exports.onExecutePostLogin = async (event, api) => {
+console.log("Step-up MFA - Event: ", event);
+
+// Are there scopes that require step-up authentication
+function isSensitiveOperation() {
+  const scopes =
+    (event.request.query && event.request.query.scope) ||
+    (event.request.body && event.request.body.scope);
+  if (!scopes) {
+    return false;
+  }
+
+  const sensitiveScopes = ['view:balance', 'transfer:funds'];
+  const requestedScopes = scopes.split(' ');
+  return requestedScopes.some(scope => sensitiveScopes.includes(scope));
+}
+
+// Function to trigger MFA
+function forceMFA() {
+  api.multifactor.enable("any");
+}
+
+// Check if the current operation is sensitive
+if (isSensitiveOperation()) {
+  console.log('Forcing MFA due to sensitive action', true);
+  forceMFA();
+}
+
+return;
+};
+
+
+/**
+* Handler that will be invoked when this action is resuming after an external redirect. If your
+* onExecutePostLogin function does not perform a redirect, this function can be safely ignored.
+*
+* @param {Event} event - Details about the user and the context in which they are logging in.
+* @param {PostLoginAPI} api - Interface whose methods can be used to change the behavior of the login.
+*/
+// exports.onContinuePostLogin = async (event, api) => {
+// };`;
+    $("#code-editable").val(code);
+  </script>
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+
+  <!-- Plugin js for this page -->
+  <script src="/assets/js/plugins/codemirror/codemirror.js"></script>
+  <script src="/assets/js/plugins/codemirror/javascript.js"></script>
+  <script src="/assets/js/plugins/codeEditor.js"></script>
+  <!-- End plugin js for this page -->
+  
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
+</body>
+
+</html>

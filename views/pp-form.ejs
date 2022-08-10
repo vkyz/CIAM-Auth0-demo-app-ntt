@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/assets/vendors/bars-pill.css">
+    <!-- End plugin css for this page -->
+  </head>
+  <!-- End plugin css for this page -->
+  
+  <body>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">More info needed</h4>
+        <p class="card-description">How would you rate this demo so far?</p>
+        <div>
+            <select id="example-pill" name="rating">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+      </div>
+      <button id="save">Save</button>
+    </div>
+  </div>
+            
+
+    <!-- Custom js for this page -->
+    <script src="/assets/js/LOCAL-VARS.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/assets/vendors/jquery.barrating.min.js"></script>
+    <!-- End custom js for this page -->
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const state = params.get('state');
+      var rating = null;
+      $('#example-pill').barrating('show', {
+            theme: 'bars-pill',
+            initialRating: 'A',
+            showValues: true,
+            showSelectedRating: false,
+            allowEmpty: true,
+            emptyValue: '-- no rating selected --',
+            onSelect: function(value, text) {
+              rating = value;
+              //alert('Selected rating: ' + value);
+            }
+        });
+
+      $("#save").click(function(e){
+        e.preventDefault();
+        window.location.replace(BASE_URL+"/continue?state="+state+"&demo_rating="+rating);
+      });
+    </script>
+  </body>
+</html>

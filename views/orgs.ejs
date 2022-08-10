@@ -1,0 +1,214 @@
+<!--
+=========================================================
+* Soft UI Dashboard - v1.0.3
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('partials/_header') -%>
+</head>
+
+<body class="g-sidenav-show  bg-gray-100">
+  <%- include('partials/_sidebar') -%>
+  <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <!-- Navbar -->
+    <%- include('partials/_navbar') -%>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+      <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4">
+            <div class="card h-100 p-3">
+              <img src="/assets/img/orgs-business-case.png" class="rounded mw-100" data-bs-toggle="modal" data-bs-target="#modal-notification">
+              <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document" style="max-width: 100%">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h6 class="modal-title" id="modal-title-notification">Organizations business usecase</h6>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <img src="/assets/img/orgs-business-case.png" class="rounded mw-100">
+                    </div>
+                    <div class="modal-footer">
+                      <!--<button type="button" class="btn btn-white">Ok, Got it</button>-->
+                      <button type="button" class="btn btn-link ml-auto" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="row">
+            <div class="card h-100 p-3">
+              <p class="mb-1 pt-2 text-bold">Documentation</p>
+              <a href="https://manage.demo-platform.auth0app.com/docs/manage-users/organizations" target="_blank">Click here for documentation</a>
+              <!--<iframe src="https://manage.demo-platform.auth0app.com/docs/manage-users/organizations" style="border: none;" width="100%" height="600px"></iframe>-->
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="card h-100 p-3">
+              <div class="row">
+                <div class="col-4">
+                  <p class="mb-1 pt-2 text-bold">Example</p>
+                </div>
+                <div class="col-8 dropdown">
+                  <a href="javascript:;" class="nav-link p-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="float: right;">
+                    Setup <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer" aria-hidden="true"></i>
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#" id="setuporgs">Set up demo Orgs</a></li>
+                    <li><a class="dropdown-item" href="#" id="setupprompt">Set Authentication Profile to "Identifier First"</a></li>
+                    <li><a class="dropdown-item" href="#" id="setuppromptbio">Set Authentication Profile to "Identifier First + Biometrics"</a></li>
+                  </ul>
+                </div>
+              </div>
+              <a href="/login" type="button" class="btn btn-primary">Sign In - org discovery</a>
+              <a href="#" type="button" class="btn btn-primary" id="signinorga">Sign In to Organization A directly</a>
+              <a href="#" type="button" class="btn btn-primary" id="signinorgb">Sign In to Organization B directly</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
+  
+  <!-- init the code for this page -->
+  <!-- ---------------------------- -->
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="/assets/js/LOCAL-VARS.js"></script>
+  <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
+  <!-- Plugin js for this page -->
+  <!-- End plugin js for this page -->
+  
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
+
+  <script>
+    $("#setuporgs").click(function(e){
+      e.preventDefault();
+      $("#loader").show();
+      $.ajax({
+          type: "POST",
+          url: "/setuporgs",
+          contentType: 'application/json',
+          success: function(data){
+              console.log("data: ",data);
+              if(data != null) window.localStorage.setItem('orgs',JSON.stringify(data));
+              $("#loader").hide();
+              alert("Organizations successfuly created.");
+          },
+          error: function(errMsg){
+              $("#loader").hide();
+              alert("Error occured: ",errMsg);
+          }
+      });
+    });
+
+    $("#setupprompt").click(function(e){
+      e.preventDefault();
+      $("#loader").show();
+      $.ajax({
+          type: "POST",
+          url: "/changeprompt",
+          contentType: 'application/json',
+          data: JSON.stringify({'prompt': {'identifier_first':true}}),
+          success: function(data){
+              console.log("data: ",data);
+              $("#loader").hide();
+              alert("Authentication Profile changed to: Identifier First");
+          },
+          error: function(errMsg){
+              $("#loader").hide();
+              alert("Error occured: ",errMsg);
+          }
+      });
+    });
+
+    $("#setuppromptbio").click(function(e){
+      e.preventDefault();
+      $("#loader").show();
+      $.ajax({
+          type: "POST",
+          url: "/changeprompt",
+          contentType: 'application/json',
+          data: JSON.stringify({'prompt': {'identifier_first':true,'webauthn_platform_first_factor':true}}),
+          success: function(data){
+              console.log("data: ",data);
+              $("#loader").hide();
+              alert("Authentication Profile changed to: Identifier First + biometrics");
+          },
+          error: function(errMsg){
+              $("#loader").hide();
+              alert("Error occured: ",errMsg);
+          }
+      });
+    });
+
+    $("#signinorga").click(async function(e){
+      e.preventDefault();
+      await signintoorg("a");
+    });
+
+    $("#signinorgb").click(async function(e){
+      e.preventDefault();
+      await signintoorg("b");
+    });
+
+    async function signintoorg(whichorg){
+      let orgs = JSON.parse(window.localStorage.getItem('orgs'));
+      let org = null;
+  
+      if(orgs != null){
+        org = whichorg == 'a'?orgs.orgidA:orgs.orgidB;
+      } else {
+        console.log("local browser storage orgs are null...using LOCAL-VARS value");
+        //get orgA id from the LOCAL-VARS file
+        org = whichorg == 'a'?ORG_A_ID:ORG_B_ID;
+      }
+      console.log("org: ", org);
+      
+      var webAuth = new auth0.WebAuth({
+        domain:       DOMAIN,
+        clientID:     CLIENTID,
+        audience:     AUDIENCE,
+        responseType: "id_token token",
+        redirectUri: REDIRECT_URL,
+        organization: org
+      });
+      await webAuth.authorize();
+    }
+  </script>
+</body>
+
+</html>
